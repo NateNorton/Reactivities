@@ -1,29 +1,21 @@
-﻿using Domain;
+﻿using Application.Activities;
+using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
-	{
-        private readonly DataContext context;
-
-        public ActivitiesController(DataContext context)
-        {
-            this.context = context;
-        }
-
+    {
         [HttpGet] // api/activities
         public async Task<ActionResult<List<Activity>>> GetActivities()
         {
-            return await context.Activities.ToListAsync();
+            return await Mediator.Send(new List.Query());
         }
 
         [HttpGet("{id}")] //api/activities/dhjgfdjhg
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
-            return await context.Activities.FindAsync(id);
+            return await Mediator.Send(new Details.Query { Id = id });
         }
 	}
 }
